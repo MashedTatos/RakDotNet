@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RakDotNet.RakNet
@@ -79,19 +80,25 @@ namespace RakDotNet.RakNet
 
                             switch ((MessageIdentifiers) stream.ReadByte())
                             {
+                                
                                 case MessageIdentifiers.ConnectionRequest:
+                                    
                                     _handleConnectionRequest(stream, endpoint);
                                     break;
                                 case MessageIdentifiers.InternalPing:
+                                    
                                     _handleInternalPing(stream, endpoint);
                                     break;
                                 case MessageIdentifiers.NewIncomingConnection:
+                                    
                                     NewConnection?.Invoke(endpoint);
                                     break;
                                 case MessageIdentifiers.DisconnectionNotification:
+                                    
                                     _handleDisconnection(endpoint);
                                     break;
                                 case MessageIdentifiers.UserPacketEnum:
+                                    
                                     PacketReceived?.Invoke(endpoint, packet);
                                     break;
                             }
@@ -168,12 +175,13 @@ namespace RakDotNet.RakNet
         private void _handleConnectionRequest(BitStream stream, IPEndPoint endpoint)
         {
             var password = stream.ReadBits(stream.BitCount - stream.ReadPosition);
-
+            Console.WriteLine(Encoding.ASCII.GetString(password));
             if (password.SequenceEqual(_password))
             {
                 var res = new BitStream();
 
                 res.WriteByte((byte) MessageIdentifiers.ConnectionRequestAccepted);
+                
                 res.Write(endpoint.Address.GetAddressBytes());
                 res.WriteUShort((ushort) endpoint.Port);
                 res.Write(new byte[2]);
@@ -188,6 +196,7 @@ namespace RakDotNet.RakNet
 
         private void _handleInternalPing(BitStream stream, IPEndPoint endpoint)
         {
+            
             var time = stream.ReadUInt();
 
             var pong = new BitStream();

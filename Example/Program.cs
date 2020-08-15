@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 using RakDotNet;
 // using RakDotNet.RakNet;
 using RakDotNet.TcpUdp;
-
+using RakDotNet.RakNet;
 namespace Example
 {
     public static class Program
     {
         public static async Task Main(string[] args)
         {
-            // IRakNetServer server = new RakNetServer(1001, "3.25 ND1");
-            IRakNetServer server = new TcpUdpServer(21836, "3.25 ND1"/*,
-                new X509Certificate2("cert.p12", "1234")*/);
+             IRakNetServer server = new RakNetServer(1001, "3.25 ND1");
+            //IRakNetServer server = new TcpUdpServer(21836, "3.25 ND1"/*,
+                
 
             Console.WriteLine("starting");
 
@@ -30,5 +30,7 @@ namespace Example
 
             await Task.Delay(-1);
         }
+
+        
     }
 }
